@@ -4,7 +4,7 @@ Simply library for easier write tests
 ## First init
 
 ```sh
-curl -sSfL https://JanGalek.github.io/vala-testcases/init.sh -o init.sh && chmod +x init.sh && ./init.sh && rm init.sh
+curl -sSfL https://raw.githubusercontent.com/JanGalek/vala-testcases/refs/heads/master/init.sh -o init.sh && chmod +x init.sh && ./init.sh && rm init.sh
 ```
 
 ### What to change
