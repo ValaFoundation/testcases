@@ -1,0 +1,3 @@
+project('vala-library-template', 'vala', 'c', version: '0.1.0')
+
+subdir('src')
