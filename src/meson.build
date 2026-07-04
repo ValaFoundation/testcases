@@ -7,7 +7,7 @@ vala_lib_deps = [
   dependency('gee-0.8'),
 ]
 
-vala_lib = shared_library(
+vala_testcase = shared_library(
   'vala_testcases',
   lib_sources,
   dependencies: vala_lib_deps,
@@ -17,14 +17,14 @@ vala_lib = shared_library(
 )
 
 vala_testcase_dep = declare_dependency(
-  link_with: vala_lib,
+  link_with: vala_testcase,
   include_directories: include_directories('.'),
   sources: lib_sources
 )
 
 pkg = import('pkgconfig')
 pkg.generate(
-  vala_lib,
+  vala_testcase,
   version: '1.0',
   name: 'vala_testcases',
   filebase: 'vala_testcases',

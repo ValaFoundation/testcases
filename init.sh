@@ -29,11 +29,11 @@ echo -e "Generating wrap file ${BLUE}${WRAP_FILE}${NC}..."
 cat << 'EOF' > "$WRAP_FILE"
 [wrap-git]
 url = https://github.com/JanGalek/vala-testcases.git
-revision = v1.0.0
+revision = v1.0.3
 depth = 1
 
 [provide]
-dependency_name = vala-testcases
+dependency_name = vala_testcases
 EOF
 
 echo -e "${GREEN}[Done] Wrap file has been successfully created.${NC}\n"
