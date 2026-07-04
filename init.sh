@@ -23,13 +23,13 @@ if [ ! -d "subprojects" ]; then
 fi
 
 # 3. Generate the .wrap file
-WRAP_FILE="subprojects/vala-testcases.wrap"
+WRAP_FILE="subprojects/vala_testcases.wrap"
 echo -e "Generating wrap file ${BLUE}${WRAP_FILE}${NC}..."
 
 cat << 'EOF' > "$WRAP_FILE"
 [wrap-git]
 url = https://github.com/JanGalek/vala-testcases.git
-revision = v1.0.3
+revision = v1.0.4
 depth = 1
 
 [provide]
