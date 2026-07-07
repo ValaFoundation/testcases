@@ -116,7 +116,7 @@ If you want everything vendored inside your own repository, copy release artifac
 To automate this setup, run the helper script in your consumer project root:
 
 ```sh
-curl -sSfL https://raw.githubusercontent.com/JanGalek/vala-testcases/master/init-local-vapi.sh | bash
+curl -sSfL https://raw.githubusercontent.com/ValaFoundation/testcases/master/init-local-vapi.sh | bash
 ```
 
 The script will:
@@ -161,13 +161,13 @@ To add `vala-testcases` as a Meson subproject dependency, run:
 Or run it directly from GitHub:
 
 ```sh
-curl -sSfL https://raw.githubusercontent.com/JanGalek/vala-testcases/refs/heads/master/init.sh -o init.sh && chmod +x init.sh && ./init.sh && rm init.sh
+curl -sSfL https://raw.githubusercontent.com/ValaFoundation/testcases/refs/heads/master/init.sh -o init.sh && chmod +x init.sh && ./init.sh && rm init.sh
 ```
 
 For local vendored integration without subprojects, use:
 
 ```sh
-curl -sSfL https://raw.githubusercontent.com/JanGalek/vala-testcases/master/init-local-vapi.sh | bash
+curl -sSfL https://raw.githubusercontent.com/ValaFoundation/testcases/master/init-local-vapi.sh | bash
 ```
 
 ## Build

@@ -28,7 +28,7 @@ echo -e "Generating wrap file ${BLUE}${WRAP_FILE}${NC}..."
 
 cat << 'EOF' > "$WRAP_FILE"
 [wrap-git]
-url = https://github.com/JanGalek/vala-testcases.git
+url = https://github.com/ValaFoundation/testcases.git
 revision = master
 depth = 1
 

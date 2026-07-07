@@ -6,9 +6,9 @@ RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-REPO_URL="${VALA_TESTCASES_REPO_URL:-https://github.com/JanGalek/vala-testcases.git}"
+REPO_URL="${VALA_TESTCASES_REPO_URL:-https://github.com/ValaFoundation/testcases.git}"
 REPO_REF="${VALA_TESTCASES_REF:-master}"
-GITHUB_REPO="${VALA_TESTCASES_GITHUB_REPO:-JanGalek/vala-testcases}"
+GITHUB_REPO="${VALA_TESTCASES_GITHUB_REPO:-ValaFoundation/testcases}"
 
 PROJECT_ROOT="${1:-$PWD}"
 MESON_FILE="${PROJECT_ROOT}/meson.build"
