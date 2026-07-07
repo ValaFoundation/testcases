@@ -1,0 +1,93 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            meson \
+            ninja-build \
+            valac \
+            pkg-config \
+            libglib2.0-dev \
+            libgee-0.8-dev
+
+      - name: Configure release build
+        run: meson setup build-release --buildtype=release
+
+      - name: Build release
+        run: meson compile -C build-release
+
+      - name: Run tests
+        run: meson test -C build-release --print-errorlogs
+
+      - name: Create release bundle
+        run: |
+          mkdir -p dist
+          cp -a build-release/src/libvala_testcases.so* dist/
+          cp build-release/src/vapi/vala_testcases.vapi dist/
+          cp build-release/src/vala_testcases.h dist/
+          (cd dist && zip -r ../vala-testcases-${GITHUB_REF_NAME}-linux.zip .)
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vala-testcases-linux
+          if-no-files-found: warn
+          path: |
+            build-release/src/libvala_testcases.so*
+            build-release/src/vapi/vala_testcases.vapi
+            build-release/src/vala_testcases.h
+            vala-testcases-${{ github.ref_name }}-linux.zip
+
+      - name: Generate release notes
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          CURRENT_TAG="${GITHUB_REF_NAME}"
+          PREVIOUS_TAG="$(git tag --sort=-creatordate | grep -v "^${CURRENT_TAG}$" | head -n 1 || true)"
+
+          {
+            echo
+            echo "## Changes"
+            echo
+
+            if [ -n "${PREVIOUS_TAG}" ]; then
+              echo "Changes since ${PREVIOUS_TAG}:"
+              echo
+              git log --no-merges --pretty=format:'- %s (%h)' "${PREVIOUS_TAG}..${CURRENT_TAG}" || true
+            else
+              echo "Initial release changes:"
+              echo
+              git log --no-merges --pretty=format:'- %s (%h)' "${CURRENT_TAG}" || true
+            fi
+            echo
+          } > RELEASE_NOTES.md
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            build-release/src/libvala_testcases.so*
+            build-release/src/vapi/vala_testcases.vapi
+            build-release/src/vala_testcases.h
+            vala-testcases-${{ github.ref_name }}-linux.zip

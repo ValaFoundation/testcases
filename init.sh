@@ -7,7 +7,7 @@ RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}==> Initializing Vala Library Template manager for Vala...${NC}"
+echo -e "${BLUE}==> Initializing vala-testcases dependency...${NC}"
 
 # 1. Check if the user is running the script in the root of a Meson project
 if [ ! -f "meson.build" ]; then
@@ -19,8 +19,8 @@ fi
 # 2. Create the subprojects folder if it doesn't exist yet
 if [ ! -d "subprojects" ]; then
     echo -e "Creating ${BLUE}subprojects/${NC} directory..."
-    mkdir "subprojects"
 fi
+mkdir -p "subprojects"
 
 # 3. Generate the .wrap file
 WRAP_FILE="subprojects/vala_testcases.wrap"
@@ -29,7 +29,7 @@ echo -e "Generating wrap file ${BLUE}${WRAP_FILE}${NC}..."
 cat << 'EOF' > "$WRAP_FILE"
 [wrap-git]
 url = https://github.com/JanGalek/vala-testcases.git
-revision = v1.1.0
+revision = master
 depth = 1
 
 [provide]
@@ -120,4 +120,4 @@ echo -e "  dependencies: [ dependency('glib-2.0'), dependency('gio-2.0'), ${GREE
 echo -e ")"
 echo -e "subdir('tests')"
 echo -e "--------------------------------------------------------"
-echo -e "Then just build the project using: ${GREEN}meson setup build && meson compile -C build${NC}"
+echo -e "Then build the project using: ${GREEN}meson setup builddir && meson compile -C builddir${NC}"

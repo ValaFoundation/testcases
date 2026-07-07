@@ -7,8 +7,8 @@ test_sources = files(
 
 test_exe = executable('tests',
   test_sources,
-  dependencies: vala_lib_deps,
-  link_with: vala_testcase,
+  dependencies: vala_testcases_deps,
+  link_with: vala_testcases_lib,
   include_directories: [include_directories('../src')],
   vala_args: ['--target-glib=2.58'],
 )

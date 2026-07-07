@@ -1,14 +1,156 @@
-# Vala test cases
-Simply library for easier write tests
+# vala-testcases
 
-## First init
+A small Vala helper library for writing and registering GLib tests with less boilerplate.
+
+## Contents
+
+- [Features](#features)
+- [Public API (summary)](#public-api-summary)
+- [Example test suite](#example-test-suite)
+- [Use In Other Projects](#use-in-other-projects)
+- [Quick init (dependency setup)](#quick-init-dependency-setup)
+- [Build](#build)
+- [Test](#test)
+- [Dependencies](#dependencies)
+- [License](#license)
+
+## Features
+
+- Simple base class for test registration
+- Wrapper for registering test suites by type
+- Compatible with GLib test runner (`Test.run()`)
+- Designed for Meson subproject integration
+
+## Public API (summary)
+
+Namespace: `Testcases`
+
+- `BaseTest`
+  - `add_test(string name, owned TestCommand.TestMethod method)`
+- `register_test_suite<T>()`
+
+## Example test suite
+
+```vala
+using GLib;
+using Gee;
+
+namespace AppTests {
+	using Testcases;
+
+	public class ExampleTest : BaseTest {
+		construct {
+			add_test ("math", test_math);
+			add_test ("text", test_text);
+		}
+
+		public void test_math () {
+			assert (1 + 1 == 2);
+		}
+
+		public void test_text () {
+			assert ("vala".length == 4);
+		}
+	}
+}
+
+int main (string[] args) {
+	Testcases.BaseTest.saved_commands = new Gee.ArrayList<Testcases.TestCommand> ();
+	Test.init (ref args);
+	Testcases.register_test_suite<AppTests.ExampleTest> ();
+	return Test.run ();
+}
+```
+
+## Use In Other Projects
+
+Yes. The generated artifacts are intended for reuse:
+
+- `build-release/src/libvala_testcases.so*`
+- `build-release/src/vapi/vala_testcases.vapi`
+- `build-release/src/vala_testcases.h`
+
+### Option 1: Meson subproject (recommended)
+
+In your consumer project `meson.build`:
+
+```meson
+vala_testcases_dep = dependency('vala_testcases', fallback: ['vala_testcases', 'vala_testcases_dep'])
+
+executable('my-tests',
+  ['tests/main.vala', 'tests/example_test.vala'],
+  dependencies: [dependency('glib-2.0'), dependency('gee-0.8'), vala_testcases_dep],
+)
+```
+
+Then in Vala code:
+
+```vala
+using Testcases;
+```
+
+### Option 2: Installed library (pkg-config)
+
+Install this project first:
+
+```sh
+meson setup builddir
+meson compile -C builddir
+meson install -C builddir
+```
+
+In your consumer `meson.build`:
+
+```meson
+vala_testcases_dep = dependency('vala_testcases', method: 'pkg-config')
+```
+
+## Quick init (dependency setup)
+
+To add `vala-testcases` as a Meson subproject dependency, run:
+
+```sh
+./init.sh
+```
+
+Or run it directly from GitHub:
 
 ```sh
 curl -sSfL https://raw.githubusercontent.com/JanGalek/vala-testcases/refs/heads/master/init.sh -o init.sh && chmod +x init.sh && ./init.sh && rm init.sh
 ```
 
-### What to change
-- README.md
-- meson.build
-- init.sh
-- src/*
+## Build
+
+```sh
+meson setup builddir
+meson compile -C builddir
+```
+
+## Test
+
+```sh
+meson test -C builddir
+```
+
+or via Makefile helper:
+
+```sh
+make tests
+```
+
+## Dependencies
+
+- glib-2.0
+- gee-0.8
+
+In consumer projects, use:
+
+```meson
+vala_testcases_dep = dependency('vala_testcases', fallback: ['vala_testcases', 'vala_testcases_dep'])
+```
+
+Then add `vala_testcases_dep` to your target dependencies.
+
+## License
+
+MIT (see `LICENSE`).
