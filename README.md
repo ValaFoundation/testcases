@@ -1,4 +1,4 @@
-# vala-testcases
+# Testcases
 
 A small Vala helper library for writing and registering GLib tests with less boilerplate.
 
