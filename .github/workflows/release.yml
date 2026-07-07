@@ -19,21 +19,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate meson.build version matches tag
+      - name: Sync meson.build version from tag
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           FILE_VERSION="$(sed -nE "s/^project\('vala-testcases', 'vala', 'c', version: '([^']+)'\)/\1/p" meson.build)"
 
           if [ -z "${FILE_VERSION}" ]; then
-            echo "::error::Unable to read project version from meson.build"
-            exit 1
+            echo "::warning::Unable to read project version from meson.build"
+            exit 0
           fi
 
           if [ "${FILE_VERSION}" != "${TAG_VERSION}" ]; then
-            echo "::error::meson.build version (${FILE_VERSION}) does not match tag (${TAG_VERSION})."
-            echo "Update meson.build, commit, and create/push the tag again."
-            exit 1
+            sed -i -E "s/(project\('vala-testcases', 'vala', 'c', version: ')[^']+('\))/\1${TAG_VERSION}\2/" meson.build
+            echo "Updated meson.build version: ${FILE_VERSION} -> ${TAG_VERSION}"
+          else
+            echo "meson.build already matches tag version: ${TAG_VERSION}"
           fi
 
       - name: Install system dependencies
@@ -108,3 +109,34 @@ jobs:
             build-release/src/vapi/vala_testcases.vapi
             build-release/src/vala_testcases.h
             vala-testcases-${{ github.ref_name }}-linux.zip
+
+      - name: Persist meson.build version to default branch
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+
+          if git show-ref --verify --quiet refs/remotes/origin/main; then
+            DEFAULT_BRANCH="main"
+          else
+            DEFAULT_BRANCH="master"
+          fi
+
+          git fetch origin "${DEFAULT_BRANCH}" --depth=1
+          git checkout "${DEFAULT_BRANCH}"
+
+          sed -i -E "s/(project\('vala-testcases', 'vala', 'c', version: ')[^']+('\))/\1${TAG_VERSION}\2/" meson.build
+
+          if git diff --quiet -- meson.build; then
+            echo "No version commit needed on ${DEFAULT_BRANCH}"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add meson.build
+          git commit -m "chore(release): bump meson version to ${TAG_VERSION}"
+
+          if ! git push origin "HEAD:${DEFAULT_BRANCH}"; then
+            echo "::warning::Failed to push version bump commit to ${DEFAULT_BRANCH}."
+            echo "::warning::Please push meson.build version update manually."
+          fi
