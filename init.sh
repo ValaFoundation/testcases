@@ -45,10 +45,10 @@ using Gee;
 
 int main (string[] args) {
 
-    Testcases.BaseTest.saved_commands = new Gee.ArrayList<Testcases.TestCommand> ();
+    ValaFoundation.Testcases.BaseTest.saved_commands = new Gee.ArrayList<ValaFoundation.Testcases.TestCommand> ();
     Test.init (ref args);
 
-    Testcases.register_test_suite<AppTests.ExampleTest> ();
+    ValaFoundation.Testcases.register_test_suite<AppTests.ExampleTest> ();
 
 
     return Test.run ();
@@ -62,7 +62,7 @@ echo -e "Generating example test file ${BLUE}${TEST_EXAMPLE_TEST_FILE}${NC}..."
 cat << 'EOF' > "$TEST_EXAMPLE_TEST_FILE"
 namespace AppTests {
     using GLib;
-    using Testcases;
+    using ValaFoundation.Testcases;
 
     public class ExampleTest : BaseTest {
         construct {

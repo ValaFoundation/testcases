@@ -1,6 +1,6 @@
 namespace AppTests {
     using GLib;
-    using Testcases;
+    using ValaFoundation.Testcases;
 
     public class ExampleTest : BaseTest {
         construct {

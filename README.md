@@ -23,7 +23,7 @@ A small Vala helper library for writing and registering GLib tests with less boi
 
 ## Public API (summary)
 
-Namespace: `Testcases`
+Namespace: `ValaFoundation.Testcases`
 
 - `BaseTest`
   - `add_test(string name, owned TestCommand.TestMethod method)`
@@ -36,7 +36,7 @@ using GLib;
 using Gee;
 
 namespace AppTests {
-	using Testcases;
+	using ValaFoundation.Testcases;
 
 	public class ExampleTest : BaseTest {
 		construct {
@@ -55,9 +55,9 @@ namespace AppTests {
 }
 
 int main (string[] args) {
-	Testcases.BaseTest.saved_commands = new Gee.ArrayList<Testcases.TestCommand> ();
+	ValaFoundation.Testcases.BaseTest.saved_commands = new Gee.ArrayList<ValaFoundation.Testcases.TestCommand> ();
 	Test.init (ref args);
-	Testcases.register_test_suite<AppTests.ExampleTest> ();
+	ValaFoundation.Testcases.register_test_suite<AppTests.ExampleTest> ();
 	return Test.run ();
 }
 ```
@@ -86,7 +86,7 @@ executable('my-tests',
 Then in Vala code:
 
 ```vala
-using Testcases;
+using ValaFoundation.Testcases;
 ```
 
 ### Option 2: Installed library (pkg-config)

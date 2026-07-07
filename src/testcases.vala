@@ -1,7 +1,7 @@
 using GLib;
 using Gee;
 
-namespace Testcases {
+namespace ValaFoundation.Testcases {
 
     public class TestCommand : GLib.Object {
         public delegate void TestMethod ();
