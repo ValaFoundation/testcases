@@ -105,6 +105,30 @@ In your consumer `meson.build`:
 vala_testcases_dep = dependency('vala_testcases', method: 'pkg-config')
 ```
 
+## Install via [Vamposer](https://github.com/ValaFoundation/vamposer)
+
+In your consumer project root:
+
+```sh
+vamposer require --dev ValaFoundation/testcases master
+vamposer install --dev
+```
+
+Then include generated Vamposer dependencies in your `meson.build`:
+
+```meson
+subdir('vamposer')
+
+executable('my-app',
+	sources,
+	dependencies: [
+		vamposer_deps
+	]
+)
+```
+
+You can also use a fixed tag or commit instead of `master`.
+
 ### Option 3: Local vapi folder in your project
 
 If you want everything vendored inside your own repository, copy release artifacts into your consumer project, for example:
